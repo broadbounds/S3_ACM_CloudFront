@@ -44,7 +44,7 @@ POLICY
 // we upload our html files to s3 bucket
 resource "aws_s3_bucket_object" "file_upload" {
   bucket = "${var.www_domain_name}"
-  key    = "my_bucket_key"
+  //key    = "my_bucket_key"
   source = "index.html"
 }
 
@@ -65,16 +65,16 @@ resource "aws_acm_certificate" "certificate" {
 
 resource "aws_acm_certificate_validation" "certificate_check" {
 certificate_arn = aws_acm_certificate.certificate.arn
-depends_on = [null_resource.certificate]
+//depends_on = [null_resource.certificate]
 }
 
 
 //Force ACM to resend email correctly.
-resource "null_resource" "certificate" {
-provisioner "local-exec" {
-command = "aws acm resend-validation-email --certificate-arn ${aws_acm_certificate.certificate.arn} --domain ${var.root_domain_name} --validation-domain ${var.root_domain_name} --profile test --region ${var.aws_region}"
-}
-}
+//resource "null_resource" "certificate" {
+//provisioner "local-exec" {
+//command = "aws acm resend-validation-email --certificate-arn ${aws_acm_certificate.certificate.arn} --domain ${var.root_domain_name} --validation-domain ${var.root_domain_name} --profile test --region ${var.aws_region}"
+//}
+//}
 
 
 resource "aws_cloudfront_distribution" "www_distribution" {
