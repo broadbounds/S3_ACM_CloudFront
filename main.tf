@@ -65,7 +65,7 @@ resource "aws_acm_certificate" "certificate" {
 
 resource "aws_acm_certificate_validation" "certificate_check" {
 certificate_arn = aws_acm_certificate.certificate.arn
-validation_record_fqdns = [ aws_route53_record.www.fqdn ]
+
 }
 
 
