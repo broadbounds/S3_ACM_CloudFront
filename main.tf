@@ -8,7 +8,7 @@ provider "aws" {
 
 resource "aws_s3_bucket" "www" {
   // Our bucket's name is going to be the same as our site's domain name.
-  bucket = "${var.www_domain_name}"
+  bucket = "www-resbbi-com-s3-bucket" 
   // Because we want our site to be available on the internet, we set this so
   // anyone can read this bucket.
   acl    = "public-read"
@@ -43,8 +43,8 @@ POLICY
 
 // we upload our html files to s3 bucket
 resource "aws_s3_bucket_object" "file_upload" {
-  bucket = "${var.www_domain_name}"
-  key    = "my_bucket_key"
+  bucket = "www-resbbi-com-s3-bucket"
+  key    = "my-www-resbbi-com-s3-bucket-key"
   source = "index.html"
 }
 
@@ -65,7 +65,7 @@ resource "aws_acm_certificate" "certificate" {
 
 resource "aws_acm_certificate_validation" "certificate_check" {
 certificate_arn = aws_acm_certificate.certificate.arn
-//depends_on = [null_resource.certificate]
+validation_record_fqdns = [ aws_route53_record.www.fqdn ]
 }
 
 
@@ -124,7 +124,7 @@ resource "aws_cloudfront_distribution" "www_distribution" {
   // Here we're ensuring we can hit this distribution using www.runatlantis.io
   // rather than the domain name CloudFront gives us.
   
-  //aliases = ["${var.www_domain_name}"]
+  aliases = ["${var.www_domain_name}"]
 
   restrictions {
     geo_restriction {
