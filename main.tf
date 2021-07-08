@@ -41,6 +41,14 @@ POLICY
   }
 }
 
+// we upload our html files to s3 bucket
+resource "aws_s3_bucket_object" "file_upload" {
+  bucket = "${var.www_domain_name}"
+  key    = "my_bucket_key"
+  source = "*.html"
+}
+
+
 // Use the AWS Certificate Manager to create an SSL cert for our domain.
 // This resource won't be created until you receive the email verifying you
 // own the domain and you click on the confirmation link.
