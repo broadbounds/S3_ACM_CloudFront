@@ -62,7 +62,23 @@ resource "aws_acm_certificate" "certificate" {
   subject_alternative_names = ["${var.root_domain_name}"]
 }
 
+
+resource "aws_acm_certificate_validation" "certificate_check" {
+certificate_arn = aws_acm_certificate.certificate.arn
+depends_on = [null_resource.certificate]
+}
+
+
+//Force ACM to resend email correctly.
+resource "null_resource" "certificate" {
+provisioner "local-exec" {
+command = "aws acm resend-validation-email --certificate-arn ${aws_acm_certificate.certificate.arn} --domain ${var.root_domain_name} --validation-domain ${var.root_domain_name} --profile test --region ${var.aws_region}"
+}
+}
+
+
 resource "aws_cloudfront_distribution" "www_distribution" {
+  depends_on = ["aws_acm_certificate_validation.certificate_check"]
   // origin is where CloudFront gets its content from.
   origin {
     // We need to set up a "custom" origin because otherwise CloudFront won't
@@ -107,7 +123,7 @@ resource "aws_cloudfront_distribution" "www_distribution" {
 
   // Here we're ensuring we can hit this distribution using www.runatlantis.io
   // rather than the domain name CloudFront gives us.
-  //aliases = ["${var.www_domain_name}"]
+  aliases = ["${var.www_domain_name}"]
 
   restrictions {
     geo_restriction {
