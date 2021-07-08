@@ -45,7 +45,7 @@ POLICY
 resource "aws_s3_bucket_object" "file_upload" {
   bucket = "${var.www_domain_name}"
   key    = "my_bucket_key"
-  source = "*.html"
+  source = "index.html"
 }
 
 
