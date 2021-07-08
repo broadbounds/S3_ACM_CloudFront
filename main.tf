@@ -99,7 +99,7 @@ resource "aws_cloudfront_distribution" "www_distribution" {
 
   // Here we're ensuring we can hit this distribution using www.runatlantis.io
   // rather than the domain name CloudFront gives us.
-  aliases = ["${var.www_domain_name}"]
+  aliases = ["${var.www_domain_name}", "*.${var.domain}"]
 
   restrictions {
     geo_restriction {
