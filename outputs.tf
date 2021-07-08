@@ -7,3 +7,8 @@ output "aws_cloudfront_details" {
   value       = aws_cloudfront_distribution.www_distribution
   description = "The details of the cloudfront"
 }
+
+output "aws_route53_details" {
+  value       = aws_route53_zone.zone
+  description = "The details of the route53"
+}
